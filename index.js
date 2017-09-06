@@ -8,6 +8,18 @@ function now(){
     return new Date().toTimeString().split(' ')[0]
 }
 
+class Progress{
+    constructor(options){
+        this.proxy = new ProgressPlugin(options)
+    }
+    apply(compiler){
+        this.proxy.apply(compiler)
+        compiler.plugin('invalid',() => {
+            console.log(chalk.white('Compiling...'))
+        })
+    }
+}
+
 function progressPlugin(minimal = false) {
     let rootPath = path.resolve('.')
     let prevStep = 0
@@ -16,7 +28,7 @@ function progressPlugin(minimal = false) {
     let finishTime
     let duration
 
-    return new ProgressPlugin((percentage, message, moduleProgress, activeModules, moduleName) => {
+    return new Progress((percentage, message, moduleProgress, activeModules, moduleName) => {
         if (prevStep === 0) {
             startTime = Date.now()
         }
@@ -93,7 +105,7 @@ function progressPlugin(minimal = false) {
             duration = (finishTime - startTime) / 1000
             duration = duration.toFixed(3)
 
-            output.push(chalk.green(`Build successfully at ${now()} by ${duration}s`))
+            output.push(chalk.white(`Build finished at ${now()} by ${duration}s`))
         }
 
         log(output.join(minimal ? '' : '\n'))
