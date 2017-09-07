@@ -67,7 +67,7 @@ function progressPlugin(minimal = false, identifier = '') {
                 // betterModuleName = betterModuleName.replace(/\\/g, '/').replace('./', '').replace('muti ', '')
 
                 let [current, total] = moduleProgress.split('/')
-                let moduleDetails = `${current} of ${total} :: ${betterModuleName}`
+                let moduleDetails = `${current} of ${total} ${betterModuleName}`
                 output.push(chalk.grey(minimal ? `(${moduleDetails})` : `  ${figures.arrowRight} ${moduleDetails}`))
             }
         }
