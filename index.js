@@ -20,7 +20,7 @@ class Progress{
     }
 }
 
-function progressPlugin(minimal = false) {
+function progressPlugin(minimal = false, identifier = '') {
     let rootPath = path.resolve('.')
     let prevStep = 0
     let subPercentage
@@ -105,7 +105,8 @@ function progressPlugin(minimal = false) {
             duration = (finishTime - startTime) / 1000
             duration = duration.toFixed(3)
 
-            output.push(chalk.white(`Build finished at ${now()} by ${duration}s`))
+            indentifier = indentifier && indentifier + ' '
+            output.push(chalk.white(`Build ${indentifier}completed at ${now()} by ${duration}s`))
         }
 
         log(output.join(minimal ? '' : '\n'))
