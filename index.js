@@ -105,8 +105,8 @@ function progressPlugin(minimal = false, identifier = '') {
             duration = (finishTime - startTime) / 1000
             duration = duration.toFixed(3)
 
-            indentifier = indentifier && indentifier + ' '
-            output.push(chalk.white(`Build ${indentifier}completed at ${now()} by ${duration}s`))
+            identifier = identifier && identifier + ' '
+            output.push(chalk.white(`Build ${identifier}completed at ${now()} by ${duration}s`))
         }
 
         log(output.join(minimal ? '' : '\n'))
