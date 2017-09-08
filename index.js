@@ -4,24 +4,28 @@ let log = require('log-update')
 let figures = require('figures')
 let path = require('path')
 
-function now(){
+function now() {
     return new Date().toTimeString().split(' ')[0]
 }
 
-class Progress{
-    constructor(options){
+class Progress {
+    constructor(options) {
         this.proxy = new ProgressPlugin(options)
     }
-    apply(compiler){
+    apply(compiler) {
         this.proxy.apply(compiler)
-        compiler.plugin('invalid',() => {
+        compiler.plugin('invalid', () => {
             console.log(chalk.white('Compiling...'))
         })
     }
 }
 
-function progressPlugin(minimal = false, identifier = '') {
+function progressPlugin(minimal = false, options = {}) {
     let rootPath = path.resolve('.')
+    let identifier = options.identifier || ''
+    let onStart = options.onStart || (() => {})
+    let onFinish = options.onFinish || (() => {})
+    let onProgress = options.onProgress || (() => {})
     let prevStep = 0
     let subPercentage
     let startTime
@@ -34,10 +38,16 @@ function progressPlugin(minimal = false, identifier = '') {
         }
         let output = minimal ? [chalk.yellow(`[${Math.round(percentage * 100)}%] `)] : []
 
+        if (percentage > 0 && percentage < 1) {
+            onProgress(percentage)
+        }
+
         // 1. compile
         if (percentage >= 0 && percentage < 0.1) {
             if (prevStep > 1) return
             prevStep = 1
+
+            if (percentage === 0) onStart()
 
             output.push(chalk.white(minimal ? 'Compile modules...' : `${figures.pointer} Compile modules`))
         }
@@ -67,7 +77,7 @@ function progressPlugin(minimal = false, identifier = '') {
                 // betterModuleName = betterModuleName.replace(/\\/g, '/').replace('./', '').replace('muti ', '')
 
                 let [current, total] = moduleProgress.split('/')
-                let moduleDetails = `${current} of ${total} ${betterModuleName}`
+                let moduleDetails = `${current} of ${total} :: ${betterModuleName}`
                 output.push(chalk.grey(minimal ? `(${moduleDetails})` : `  ${figures.arrowRight} ${moduleDetails}`))
             }
         }
@@ -105,8 +115,9 @@ function progressPlugin(minimal = false, identifier = '') {
             duration = (finishTime - startTime) / 1000
             duration = duration.toFixed(3)
 
-            identifier = identifier && identifier + ' '
-            output.push(chalk.white(`Build ${identifier}completed at ${now()} by ${duration}s`))
+            onFinish()
+            identifier = identifier && identifier + ' ' 
+            output.push(chalk.white(`Build ${identifier}finished at ${now()} by ${duration}s`))
         }
 
         log(output.join(minimal ? '' : '\n'))
