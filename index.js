@@ -23,6 +23,7 @@ class Progress {
 function progressPlugin(minimal = false, options = {}) {
     let rootPath = path.resolve('.')
     let identifier = options.identifier || ''
+    let id = identifier && identifier + ' ' 
     let onStart = options.onStart || (() => {})
     let onFinish = options.onFinish || (() => {})
     let onProgress = options.onProgress || (() => {})
@@ -49,10 +50,10 @@ function progressPlugin(minimal = false, options = {}) {
 
             if (percentage === 0) onStart()
 
-            output.push(chalk.white(minimal ? 'Compile modules...' : `${figures.pointer} Compile modules`))
+            output.push(chalk.white(minimal ? `Compile ${id}modules...` : `${figures.pointer} Compile ${id}modules`))
         }
         if (percentage === 0.1 && !minimal) {
-            output.push(`${figures.tick} Compile modules`)
+            output.push(`${figures.tick} Compile ${id}modules`)
         }
         // 2. build
         if (percentage >= 0.1 && percentage <= 0.7) {
@@ -60,7 +61,7 @@ function progressPlugin(minimal = false, options = {}) {
             prevStep = 2
 
             subPercentage = Math.round((percentage - 0.1) * 10000 / 60)
-            output.push(chalk.white(minimal ? 'Build modules...' : `${figures.pointer} Build modules (${subPercentage}%)`))
+            output.push(chalk.white(minimal ? `Build ${id}modules...` : `${figures.pointer} Build ${id}modules (${subPercentage}%)`))
 
             if (moduleName !== undefined) {
                 let betterModuleName = moduleName
@@ -82,7 +83,7 @@ function progressPlugin(minimal = false, options = {}) {
             }
         }
         if (percentage > 0.7 && !minimal) {
-            output.push(`${figures.tick} Build modules`)
+            output.push(`${figures.tick} Build ${id}modules`)
         }
 
         // 3. optimize
@@ -90,22 +91,22 @@ function progressPlugin(minimal = false, options = {}) {
             if (prevStep > 3) return
             prevStep = 3
             subPercentage = Math.round((percentage - 0.71) * 10000 / 23)
-            output.push(chalk.white(minimal ? 'Optimize modules...' : `${figures.pointer} Optimize modules (${subPercentage}%)`))
+            output.push(chalk.white(minimal ? `Optimize ${id}modules...` : `${figures.pointer} Optimize ${id}modules (${subPercentage}%)`))
             let extraMsg = message + percentage === 0.91 ? ' -- may take long time' : ''
             output.push(chalk.grey(minimal ? extraMsg : `  ${figures.arrowRight} ${extraMsg}`))
         }
         if (percentage >= 0.95 && !minimal) {
-            output.push(`${figures.tick} Optimize modules`)
+            output.push(`${figures.tick} Optimize ${id}modules`)
         }
 
         // 4. emmit
         if (percentage >= 0.95 && percentage < 1) {
             if (prevStep > 4) return
             prevStep = 4
-            output.push(chalk.white(minimal ? 'Emmit files...' : `  ${figures.pointer} Emmit files`))
+            output.push(chalk.white(minimal ? `Emmit ${id}files...` : `  ${figures.pointer} Emmit ${id}files`))
         }
         if (percentage === 1 && !minimal) {
-            output.push(`${figures.tick} Emmit files`)
+            output.push(`${figures.tick} Emmit ${id}files`)
         }
 
         // 5. finished
@@ -116,8 +117,7 @@ function progressPlugin(minimal = false, options = {}) {
             duration = duration.toFixed(3)
 
             onFinish()
-            identifier = identifier && identifier + ' ' 
-            output.push(chalk.white(`Build ${identifier}finished at ${now()} by ${duration}s`))
+            output.push(chalk.white(`Build ${id}finished at ${now()} by ${duration}s`))
         }
 
         log(output.join(minimal ? '' : '\n'))
