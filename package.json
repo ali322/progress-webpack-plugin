@@ -1,6 +1,6 @@
 {
   "name": "progress-webpack-plugin",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "progress webpack plugin",
   "main": "index.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "log-update": "^2.1.0"
   },
   "peerDependencies": {
-    "webpack": "^2.2.1"
+    "webpack": "^2.0.0 || ^3.0.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
