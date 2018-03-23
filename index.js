@@ -14,9 +14,14 @@ class Progress {
     }
     apply(compiler) {
         this.proxy.apply(compiler)
-        compiler.plugin('invalid', () => {
+        let invalid = () => {
             console.log(chalk.white('Compiling...'))
-        })
+        }
+        if(compiler.hooks) {
+            compiler.hooks.invalid.tap('ProgressWebpckPlugin', invalid)
+        } else {
+            compiler.plugin('invalid', invalid)
+        }
     }
 }
 
