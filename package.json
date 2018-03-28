@@ -1,10 +1,10 @@
 {
   "name": "progress-webpack-plugin",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "progress webpack plugin",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
