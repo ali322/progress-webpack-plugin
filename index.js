@@ -10,10 +10,10 @@ function now() {
 
 class Progress {
   constructor(options) {
-    this.proxy = new ProgressPlugin(options)
+    this.delegate = new ProgressPlugin(options)
   }
   apply(compiler) {
-    this.proxy.apply(compiler)
+    this.delegate.apply(compiler)
     let invalid = () => {
       console.log(chalk.white('Compiling...'))
     }
@@ -32,6 +32,7 @@ function progressPlugin(minimal = false, options = {}) {
   let onStart = options.onStart || (() => {})
   let onFinish = options.onFinish || (() => {})
   let onProgress = options.onProgress || (() => {})
+  let clear = typeof options.clear === 'boolean' ? options.clear : true
   let prevStep = 0
   let subPercentage
   let startTime
@@ -162,10 +163,13 @@ function progressPlugin(minimal = false, options = {}) {
           chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
         )
       }
-
       log(output.join(minimal ? '' : '\n'))
       if (percentage === 1) {
-        log.done()
+        if(clear) {
+          log.clear()
+        } else {
+          log.done()
+        }
       }
     }
   )
