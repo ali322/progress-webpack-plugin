@@ -31,7 +31,7 @@ function progressPlugin(minimal = false, options = {}) {
   let id = identifier && identifier + ' '
   let onStart = options.onStart || (() => {})
   let onFinish = options.onFinish || (() => {})
-  let onProgress = options.onProgress || (() => {})
+  let onProgress = options.onProgress
   let clear = typeof options.clear === 'boolean' ? options.clear : true
   let prevStep = 0
   let subPercentage
@@ -47,10 +47,6 @@ function progressPlugin(minimal = false, options = {}) {
       let output = minimal
         ? [chalk.yellow(`[${Math.round(percentage * 100)}%] `)]
         : []
-
-      if (percentage > 0 && percentage < 1) {
-        onProgress(percentage)
-      }
 
       // 1. compile
       if (percentage >= 0 && percentage < 0.1) {
@@ -163,12 +159,18 @@ function progressPlugin(minimal = false, options = {}) {
           chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
         )
       }
-      log(output.join(minimal ? '' : '\n'))
-      if (percentage === 1) {
-        if(clear) {
-          log.clear()
-        } else {
-          log.done()
+      if (onProgress) {
+        if (percentage > 0 && percentage < 1) {
+          onProgress(percentage)
+        }
+      } else {
+        log(output.join(minimal ? '' : '\n'))
+        if (percentage === 1) {
+          if (clear) {
+            log.clear()
+          } else {
+            log.done()
+          }
         }
       }
     }
