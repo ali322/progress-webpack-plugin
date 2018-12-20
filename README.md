@@ -31,6 +31,12 @@ Plugin Options
 ===
 
 - **minimal**: enable minimal mode or not,default value is false
+- **identifier**: identifier of webpack bundle
+- **onStart**: callback function when webpack bundler started
+- **onFinish**: callback function when webpack bundler finished
+- **onProgress**: callback function when webpack bundler running
+- **clear**: whether clear console when webpack bundler finished
+
 
 ## License
 

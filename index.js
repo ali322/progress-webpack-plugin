@@ -30,7 +30,7 @@ function progressPlugin(minimal = false, options = {}) {
   let identifier = options.identifier || ''
   let id = identifier && identifier + ' '
   let onStart = options.onStart || (() => {})
-  let onFinish = options.onFinish || (() => {})
+  let onFinish = options.onFinish
   let onProgress = options.onProgress
   let clear = typeof options.clear === 'boolean' ? options.clear : true
   let prevStep = 0
@@ -154,10 +154,13 @@ function progressPlugin(minimal = false, options = {}) {
         duration = (finishTime - startTime) / 1000
         duration = duration.toFixed(3)
 
-        onFinish()
-        output.push(
-          chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
-        )
+        if (typeof onFinish === 'function') {
+          onFinish(id, now(), duration)
+        } else {
+          output.push(
+            chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
+          )
+        }
       }
       if (onProgress) {
         if (percentage > 0 && percentage < 1) {
