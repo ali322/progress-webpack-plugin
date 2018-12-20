@@ -156,8 +156,6 @@ function progressPlugin(minimal = false, options = {}) {
 
         if (typeof onFinish === 'function') {
           onFinish(id, now(), duration)
-        } else if (typeof onFinish === 'string') {
-          output.push(onFinish)
         } else {
           output.push(
             chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
