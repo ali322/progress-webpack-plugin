@@ -26,12 +26,13 @@ class Progress {
   }
 }
 
-function progressPlugin(formatted = true, options = {}) {
+function progressPlugin(options = {}) {
   let identifier = options.identifier || "";
   let id = identifier && identifier + " ";
   let onStart = options.onStart || (() => {});
   let onFinish = options.onFinish;
   let onProgress = options.onProgress;
+  let formatted = typeof options.clear === "boolean" ? options.clear : true;
   let clear = typeof options.clear === "boolean" ? options.clear : true;
   let startTime;
   let finishTime;
