@@ -32,7 +32,7 @@ function progressPlugin(options = {}) {
   let onStart = options.onStart || (() => {})
   let onFinish = options.onFinish
   let onProgress = options.onProgress
-  let formatted = typeof options.clear === 'boolean' ? options.clear : true
+  let coloring = onProgress === undefined
   let clear = typeof options.clear === 'boolean' ? options.clear : true
   let startTime
   let finishTime
@@ -40,17 +40,18 @@ function progressPlugin(options = {}) {
 
   const handler = (percentage, message, ...args) => {
     startTime = Date.now()
-    let output = formatted
+    let output = coloring
       ? [chalk.yellow(`[${Math.round(percentage * 100)}%] `)]
-      : []
+      : [`[${Math.round(percentage * 100)}%] `]
     if (percentage > thresholder) {
       return
     }
-    if (percentage >= 0 && percentage < thresholder) {
-      if (percentage === 0) onStart()
-
+    if (percentage === 0) onStart()
+    if (percentage > 0 && percentage < thresholder) {
       if (message === '') return
-      output.push(chalk.white(`${message} ${id}`))
+      output.push(
+        coloring ? chalk.white(`${message} ${id}`) : `${message} ${id}`
+      )
       if (args.length > 0) {
         let details = args.join(' ')
         if (
@@ -60,11 +61,7 @@ function progressPlugin(options = {}) {
           const rootPath = path.resolve('.')
           details = [args[0]].concat([args[1].replace(rootPath, '')]).join(' ')
         }
-        output.push(chalk.grey(`(${details})`))
-      }
-      if (!formatted) {
-        console.log(output.join('\n'))
-        return
+        output.push(coloring ? chalk.grey(`(${details})`) : `(${details})`)
       }
     }
 
@@ -78,13 +75,15 @@ function progressPlugin(options = {}) {
         onFinish(id, now(), duration)
       } else {
         output.push(
-          chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
+          coloring
+            ? chalk.white(`Build ${id}finished at ${now()} by ${duration}s`)
+            : `Build ${id}finished at ${now()} by ${duration}s`
         )
       }
     }
     if (onProgress) {
       if (percentage > 0 && percentage < thresholder) {
-        onProgress(percentage, output.join(''))
+        onProgress(output.join(''), percentage)
       }
     } else {
       log(output.join(''))
