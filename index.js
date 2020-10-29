@@ -40,17 +40,18 @@ function progressPlugin(options = {}) {
 
   const handler = (percentage, message, ...args) => {
     startTime = Date.now()
-    let output = coloring
-      ? [chalk.yellow(`[${Math.round(percentage * 100)}%] `)]
-      : [`[${Math.round(percentage * 100)}%] `]
+    let output = []
     if (percentage > thresholder) {
       return
     }
     if (percentage === 0) onStart()
     if (percentage > 0 && percentage < thresholder) {
       if (message === '') return
+      const banner = `[${Math.round(percentage * 100)}%] `
       output.push(
-        coloring ? chalk.white(`${message} ${id}`) : `${message} ${id}`
+        coloring
+          ? chalk.yellow(banner) + chalk.white(`${message} ${id}`)
+          : `${banner}${message} ${id}`
       )
       if (args.length > 0) {
         let details = args.join(' ')
