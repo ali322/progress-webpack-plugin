@@ -9,6 +9,17 @@ function now() {
   return new Date().toTimeString().split(' ')[0]
 }
 
+function isEqual(arr1, arr2) {
+  let equal = arr1.length === arr2.length
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      equal = false
+      break
+    }
+  }
+  return equal
+}
+
 class Progress {
   constructor(options) {
     this.delegate = new ProgressPlugin(options)
@@ -38,6 +49,7 @@ function progressPlugin(options = {}) {
   let finishTime
   let duration
 
+  let prev = {}
   const handler = (percentage, message, ...args) => {
     startTime = Date.now()
     let output = []
@@ -47,6 +59,14 @@ function progressPlugin(options = {}) {
     if (percentage === 0) onStart()
     if (percentage > 0 && percentage < thresholder) {
       if (message === '') return
+      if (
+        prev.percentage === percentage &&
+        prev.message === message &&
+        isEqual(prev.args, args)
+      ) {
+        return
+      }
+      prev = { percentage, message, args }
       const banner = `[${Math.round(percentage * 100)}%] `
       output.push(coloring ? chalk.yellow(banner) : banner)
       output.push(
