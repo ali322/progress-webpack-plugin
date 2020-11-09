@@ -63,7 +63,7 @@ function progressPlugin(options = {}) {
         }
         if (/^import\s{1}loader/.test(args[0]) === true && args.length === 1) {
           const matches = args[0].match(
-            /^import\s{1}loader\s{1}(\S+\/node_modules\/)/
+            /^import\s{1}loader\s{1}(.+\/node_modules\/)/
           )
           details = args[0].replace(matches[1], '')
         }
