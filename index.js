@@ -48,10 +48,9 @@ function progressPlugin(options = {}) {
     if (percentage > 0 && percentage < thresholder) {
       if (message === '') return
       const banner = `[${Math.round(percentage * 100)}%] `
+      output.push(coloring ? chalk.yellow(banner) : banner)
       output.push(
-        coloring
-          ? chalk.yellow(banner) + chalk.white(`${message} ${id}`)
-          : `${banner}${message} ${id}`
+        coloring ? chalk.white(`${message} ${id}`) : `${message} ${id}`
       )
       if (args.length > 0) {
         let details = args.join(' ')
@@ -61,6 +60,12 @@ function progressPlugin(options = {}) {
         ) {
           const rootPath = path.resolve('.')
           details = [args[0]].concat([args[1].replace(rootPath, '')]).join(' ')
+        }
+        if (/^import\s{1}loader/.test(args[0]) === true && args.length === 1) {
+          const matches = args[0].match(
+            /^import\s{1}loader\s{1}(\S+\/node_modules\/)/
+          )
+          details = args[0].replace(matches[1], '')
         }
         output.push(coloring ? chalk.grey(`(${details})`) : `(${details})`)
       }
@@ -84,7 +89,7 @@ function progressPlugin(options = {}) {
     }
     if (onProgress) {
       if (percentage > 0 && percentage < thresholder) {
-        onProgress(output.join(''), percentage)
+        onProgress(output, percentage)
       }
     } else {
       log(output.join(''))
