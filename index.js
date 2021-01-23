@@ -85,7 +85,9 @@ function progressPlugin(options = {}) {
           const matches = args[0].match(
             /^import\s{1}loader\s{1}(.+\/node_modules\/)/
           )
-          details = args[0].replace(matches[1], '')
+          if (matches) {
+            details = args[0].replace(matches[1], '')
+          }
         }
         output.push(coloring ? chalk.grey(`(${details})`) : `(${details})`)
       }
