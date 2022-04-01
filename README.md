@@ -1,4 +1,4 @@
-progress-webpack-plugin [![Build Status](https://travis-ci.org/ali322/progress-webpack-plugin.svg?branch=master)](https://travis-ci.org/ali322/progress-webpack-plugin) [![npm version](https://badge.fury.io/js/progress-webpack-plugin.svg)](https://badge.fury.io/js/progress-webpack-plugin)
+progress-webpack-plugin  [![npm version](https://badge.fury.io/js/progress-webpack-plugin.svg)](https://badge.fury.io/js/progress-webpack-plugin)
 ===
 [![NPM](https://nodei.co/npm/progress-webpack-plugin.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/progress-webpack-plugin/)
 
